@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserM
 from django.conf import settings
 #user manager
 class CustomUserManager(BaseUserManager):
-	def create_superuser(self, email, user_name,password, **other_fields):
+	def create_superuser(self, email, user_name ,password, **other_fields):
 
 		other_fields.setdefault('is_staff', True)
 		other_fields.setdefault('is_superuser', True)
@@ -38,8 +38,9 @@ class CustomUserManager(BaseUserManager):
 		user.save()
 		return user
 class CustomUser(AbstractUser, PermissionsMixin):
+	username = None
 	email = models.EmailField(_('email address'))
-	user_name = models.CharField(max_length=150, blank=True, unique=True)
+	user_name = models.CharField(max_length=150, blank=True, unique = True)
 	first_name = models.CharField(max_length=150, blank=True)
 	last_name = models.CharField(max_length=150, blank=True)
 	start_date = models.DateTimeField(default=timezone.now)
@@ -49,7 +50,6 @@ class CustomUser(AbstractUser, PermissionsMixin):
 	city = models.CharField(max_length=1024)
 	objects = CustomUserManager()
 
-	
 	USERNAME_FIELD = 'user_name'
 	REQUIRED_FIELDS = ['email']
 
