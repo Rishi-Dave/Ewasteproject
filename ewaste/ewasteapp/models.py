@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 from django.db import models
 from django.db.models.fields import NullBooleanField
 from django.utils import timezone
@@ -5,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager
 from django.conf import settings
 #user manager
-"""""
 class CustomUserManager(BaseUserManager):
 	def create_superuser(self, email, user_name,password, **other_fields):
 
@@ -20,20 +20,19 @@ class CustomUserManager(BaseUserManager):
 			raise ValueError(
 				'Superuser must be assigned to is_superuser=True.')
 		
-		user = self.create_user(email, user_name, "rishi", "dave", password, "no")
+		user = self.create_user(email, user_name, "rishi", "dave", password, "none", "non","none" )
 		user.is_admin = True
 		user.is_staff = True
 		user.is_superuser = True
 		user.is_active = True
 		user.save()
 		return user
-	def create_user(self, email, user_name, first_name, last_name, password, address):
+	def create_user(self, email, user_name, first_name, last_name, password, address, zip_code, city):
 		if not email:
 			raise ValueError(_('You must provide an email address'))
 
 		email = self.normalize_email(email)
-		user = self.model(email=email, user_name=user_name,
-							first_name=first_name, last_name = last_name, address = address)
+		user = self.model(email=email, user_name=user_name, first_name=first_name, last_name = last_name, address = address, zip_code = zip_code, city = city)
 		user.set_password(password)
 		user.is_active = True
 		user.save()
@@ -46,12 +45,14 @@ class CustomUser(AbstractUser, PermissionsMixin):
 	start_date = models.DateTimeField(default=timezone.now)
 	address = models.CharField(max_length=300) 
 	is_active = models.BooleanField(default=True)
+	zip_code = models.CharField(max_length=12)
+	city = models.CharField(max_length=1024)
 	objects = CustomUserManager()
 
 	
 	USERNAME_FIELD = 'user_name'
 	REQUIRED_FIELDS = ['email']
-"""
+
 class Item(models.Model):
 	OBJECT_TYPE_CHOICES = (
 		("battery", "battery"),
@@ -64,21 +65,4 @@ class Item(models.Model):
 		default = "none"
 	)
 	is_delivered = models.BooleanField(default=False)
-class UserAddOns(models.Model):
-	user = models.OneToOneField(
-		settings.AUTH_USER_MODEL,
-		on_delete=models.CASCADE,
-	)
-	street_address = models.CharField(
-		max_length=1024,
-	)
-	zip_code = models.CharField(
-		max_length=12,
-	)
-	city = models.CharField(
-		max_length=1024,
-	)
-
-	state = models.CharField(
-		max_length=3
-	)
+	
