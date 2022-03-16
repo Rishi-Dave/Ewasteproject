@@ -29,6 +29,12 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+#EMAIL_BACKEND = 'django.core.mail.backends.stmp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'electronicsrecylingservice@gmail.com'
+EMAIL_HOST_PASSWORD = 'Ewaste123'
+EMAIL_PORT = 587
 
 INSTALLED_APPS = [
     'django.contrib.admin',

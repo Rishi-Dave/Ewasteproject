@@ -49,7 +49,7 @@ class CustomUser(AbstractUser, PermissionsMixin):
 	zip_code = models.CharField(max_length=12)
 	city = models.CharField(max_length=1024)
 	objects = CustomUserManager()
-
+	is_driver = models.BooleanField(default=False)
 	USERNAME_FIELD = 'user_name'
 	REQUIRED_FIELDS = ['email']
 

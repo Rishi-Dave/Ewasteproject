@@ -1,10 +1,10 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
-
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
 from django.views.generic.edit import CreateView
 from ewasteapp.forms import  objectTypeForm, userSignInForm
 from .models import Item, CustomUser
-
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -17,19 +17,48 @@ class ItemPickupView(CreateView):
     template_name = 'pickup.html'
     success_url = 'pickup.html'
 
+def sign_up(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    else:
+        form = userSignInForm()
+        if request.method == 'POST':
+            form = userSignInForm(request.POST)
+            if form.is_valid():
+                form.save()
+                username = form.cleaned_data.get('user_name')
+                email = form.cleaned_data.get('email')
+                htmly = get_template('Email.html')
+                d = { 'username': username }
+                subject, from_email, to = 'welcome', 'electronicsrecylingservice@gmail.com', email
+                html_content = htmly.render(d)
+                msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+                messages.success(request, 'Account was created for ' + username)
+                return redirect('login')
+            else:
+                # Add action to invalid form phase
+                messages.error(request, form.errors)
+        context = {"form" : form}
+        return render(request, 'signup.html', context)
+
+'''''
 class UserView(CreateView):
     form_class = userSignInForm
-    template_name = 'signup.html'
+    template_name = 'signup.html' 
     success_url = '/login'
     def form_invalid(self,form):
             # Add action to invalid form phase
             messages.error(self.request, form.errors)
             return self.render_to_response(self.get_context_data(form=form))
+    
+'''
 def pickup(request):
-    return render(request, 'pickup.html',)
+    return render(request, 'pickup.html')
 
 def postpickup(request):
-    return render(request, 'postpickup.html',)
+    return render(request, 'postpickup.html')
 
 def user_login(request):
     if request.method == "POST":
@@ -39,9 +68,8 @@ def user_login(request):
        user = authenticate(username = username, password = pass1)
        if user is not None:
            login(request, user)
-           fname = user.first_name
-           address = user.address
-           return render(request, "index.html", {"fname":fname}, {"address":address})
+           messages.success(request, "Logged In Successfully!!")
+           return redirect('login')
        else:
             messages.error(request, "Bad Credentials")
             return redirect('login')
