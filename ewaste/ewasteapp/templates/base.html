@@ -71,12 +71,18 @@
                   <li class="nav-link pickup"  > User: {{user.user_name}}
                 
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link pickup" href="{% url 'signout' %}"> Signout</a>
+                </li> 
                   {%else%}
                   <li class="nav-item">
                     <a class="nav-link pickup" href="{% url 'login' %}"> Customer Log-In</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link pickup" href="{% url 'driverlogin' %}"> Driver Log-In</a>
+                </li>   
+                <li class="nav-item">
+                    <a class="nav-link pickup" href="{% url 'signup' %}"> SignUp</a>
                 </li>   
                 {% endif %}
         

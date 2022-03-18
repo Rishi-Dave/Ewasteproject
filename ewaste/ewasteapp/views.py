@@ -3,11 +3,11 @@ from django.http import HttpResponse
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.views.generic.edit import CreateView
-from ewasteapp.forms import  objectTypeForm, userSignInForm
+from ewasteapp.forms import  DriverSignInForm, objectTypeForm, userLogInForm, userSignInForm
 from .models import Item, CustomUser
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+
 # Create your views here.
 def home_page(request):
     return render(request, "index.html")
@@ -28,13 +28,14 @@ def sign_up(request):
                 form.save()
                 username = form.cleaned_data.get('user_name')
                 email = form.cleaned_data.get('email')
+                
                 htmly = get_template('Email.html')
                 d = { 'username': username }
                 subject, from_email, to = 'welcome', 'electronicsrecylingservice@gmail.com', email
                 html_content = htmly.render(d)
                 msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
                 msg.attach_alternative(html_content, "text/html")
-                msg.send()
+                msg.send()   
                 messages.success(request, 'Account was created for ' + username)
                 return redirect('login')
             else:
@@ -61,23 +62,53 @@ def postpickup(request):
     return render(request, 'postpickup.html')
 
 def user_login(request):
-    if request.method == "POST":
-       username = request.POST["username"] 
-       pass1 = request.POST['pass1']
+    if request.method == 'POST':
+        form = userLogInForm(request, data = request.POST)
+        if form.is_valid(): 
+            user = form.get_user()
+            if user is not None:
+                login(request, user)
+                messages.success(request, "Logged In Successfully!!")
+                return redirect('login')
+            else:
+                messages.error(request, "Bad Credentials")
+                return redirect('login')
+    else:
+        form = userLogInForm(request)
+    context = {"form" : form}
+    return render(request, 'login.html', context)
+def driver_sign_up(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    else:
+        form = DriverSignInForm()
+        if request.method == 'POST':
+            form = DriverSignInForm(request.POST)
+            if form.is_valid():
+                form.save()
+                username = form.cleaned_data.get('user_name')
+                email = form.cleaned_data.get('email')
+                
+                htmly = get_template('Email.html')
+                d = { 'username': username }
+                subject, from_email, to = 'welcome', 'electronicsrecylingservice@gmail.com', email
+                html_content = htmly.render(d)
+                msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()   
+                messages.success(request, 'Account was created for ' + username)
+                return redirect('login')
+            else:
+                # Add action to invalid form phase
+                messages.error(request, form.errors)
+        context = {"form" : form}
+        return render(request, 'signup.html', context)
 
-       user = authenticate(username = username, password = pass1)
-       if user is not None:
-           login(request, user)
-           messages.success(request, "Logged In Successfully!!")
-           return redirect('login')
-       else:
-            messages.error(request, "Bad Credentials")
-            return redirect('login')
-    return render(request, 'login.html')
 def signout(request):
     logout(request)
     messages.success(request, "Logged Out Successfully!!")
     return redirect('login')
+
 def driverlogin(request):
     return render(request, 'driverlogin.html')
     

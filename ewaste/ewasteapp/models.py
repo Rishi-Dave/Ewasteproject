@@ -53,6 +53,7 @@ class CustomUser(AbstractUser, PermissionsMixin):
 	USERNAME_FIELD = 'user_name'
 	REQUIRED_FIELDS = ['email']
 
+
 class Item(models.Model):
 	OBJECT_TYPE_CHOICES = (
 		("battery", "battery"),
