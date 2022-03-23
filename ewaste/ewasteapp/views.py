@@ -28,15 +28,17 @@ def sign_up(request):
                 form.save()
                 username = form.cleaned_data.get('user_name')
                 email = form.cleaned_data.get('email')
-                
+                '''''
                 htmly = get_template('Email.html')
                 d = { 'username': username }
                 subject, from_email, to = 'welcome', 'electronicsrecylingservice@gmail.com', email
                 html_content = htmly.render(d)
                 msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
                 msg.attach_alternative(html_content, "text/html")
-                msg.send()   
+                msg.send() 
+                '''  
                 messages.success(request, 'Account was created for ' + username)
+                
                 return redirect('login')
             else:
                 # Add action to invalid form phase
@@ -88,7 +90,7 @@ def driver_sign_up(request):
                 form.save()
                 username = form.cleaned_data.get('user_name')
                 email = form.cleaned_data.get('email')
-                
+                '''''
                 htmly = get_template('Email.html')
                 d = { 'username': username }
                 subject, from_email, to = 'welcome', 'electronicsrecylingservice@gmail.com', email
@@ -97,6 +99,7 @@ def driver_sign_up(request):
                 msg.attach_alternative(html_content, "text/html")
                 msg.send()   
                 messages.success(request, 'Account was created for ' + username)
+                '''
                 return redirect('login')
             else:
                 # Add action to invalid form phase

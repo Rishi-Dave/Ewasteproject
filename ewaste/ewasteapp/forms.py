@@ -34,7 +34,7 @@ class DriverSignInForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ["email", "user_name", "first_name", "last_name", "address", "zip_code", "city",]
+        fields = ["email", "user_name", "first_name", "last_name", "address", "zip_code", "city","is_driver"]
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
