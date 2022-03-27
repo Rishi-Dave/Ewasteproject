@@ -12,11 +12,16 @@ from django.contrib.auth import authenticate, login, logout
 def home_page(request):
     return render(request, "index.html")
 class ItemPickupView(CreateView):
-    model = Item
     form_class = objectTypeForm
     template_name = 'pickup.html'
-    success_url = 'pickup.html'
-
+    success_url = '/pickup'
+def item_form(request):
+    form = objectTypeForm()
+    if request.method == 'POST':
+        if request.user.is_authenticated():
+            form = objectTypeForm(request.POST)
+            if form.is_valid():
+                form.save()
 def sign_up(request):
     if request.user.is_authenticated:
         return redirect('home')

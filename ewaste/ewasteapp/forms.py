@@ -3,10 +3,14 @@ from .models import Item, CustomUser
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
-class objectTypeForm(ModelForm):
-    class Meta:
-        model = Item
-        fields = ['object_type']
+OBJECT_TYPE_CHOICES = [
+		("battery", "battery"),
+		("none" , "none"),
+		("monitor" , "monitor"), #think of more later
+    ]
+class objectTypeForm(forms.Form):
+    item= forms.CharField(label='Choose Items:', widget=forms.Select(choices=OBJECT_TYPE_CHOICES))
+    
 class userSignInForm(UserCreationForm):
     """
     The default 

@@ -53,8 +53,12 @@ class CustomUser(AbstractUser, PermissionsMixin):
 	USERNAME_FIELD = 'user_name'
 	REQUIRED_FIELDS = ['email']
 
-
+class ItemList(models.Model):
+	user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+	item_list = []
+	is_delivered = models.BooleanField(default=False)
 class Item(models.Model):
+	itemlist = models.ForeignKey(ItemList, on_delete=models.CASCADE)
 	OBJECT_TYPE_CHOICES = (
 		("battery", "battery"),
 		("none" , "none"),
@@ -65,5 +69,5 @@ class Item(models.Model):
 		choices = OBJECT_TYPE_CHOICES,
 		default = "none"
 	)
-	is_delivered = models.BooleanField(default=False)
+	
 	
