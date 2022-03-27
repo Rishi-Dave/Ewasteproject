@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models.fields import NullBooleanField
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.conf import settings
 #user manager
 class CustomUserManager(BaseUserManager):
@@ -37,7 +37,7 @@ class CustomUserManager(BaseUserManager):
 		user.is_active = True
 		user.save()
 		return user
-class CustomUser(AbstractUser, PermissionsMixin):
+class CustomUser(AbstractBaseUser, PermissionsMixin):
 	username = None
 	email = models.EmailField(_('email address'))
 	user_name = models.CharField(max_length=150, blank=True, unique = True)
