@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models.fields import NullBooleanField
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager
 from django.conf import settings
 #user manager
 class CustomUserManager(BaseUserManager):
@@ -37,7 +37,7 @@ class CustomUserManager(BaseUserManager):
 		user.is_active = True
 		user.save()
 		return user
-class CustomUser(AbstractBaseUser, PermissionsMixin):
+class CustomUser(AbstractUser, PermissionsMixin):
 	username = None
 	email = models.EmailField(_('email address'))
 	user_name = models.CharField(max_length=150, blank=True, unique = True)
@@ -57,6 +57,7 @@ class ItemList(models.Model):
 	user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 	item_list = []
 	is_delivered = models.BooleanField(default=False)
+
 class Item(models.Model):
 	itemlist = models.ForeignKey(ItemList, on_delete=models.CASCADE)
 	OBJECT_TYPE_CHOICES = (
