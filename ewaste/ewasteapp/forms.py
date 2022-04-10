@@ -1,15 +1,12 @@
 from django.forms import ModelForm
-from .models import Item, CustomUser
+from .models import  CustomUser
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
-OBJECT_TYPE_CHOICES = [
-		("battery", "battery"),
-		("none" , "none"),
-		("monitor" , "monitor"), #think of more later
-    ]
-class objectTypeForm(forms.Form):
-    item= forms.CharField(label='Choose Items:', widget=forms.Select(choices=OBJECT_TYPE_CHOICES))
+class pickupForm(ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['pickup_requested']
     
 class userSignInForm(UserCreationForm):
     """

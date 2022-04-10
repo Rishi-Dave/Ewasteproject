@@ -19,14 +19,15 @@ from ewasteapp import views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = [
     path('', views.home_page, name = 'home'),
-    path('pickup/', views.ItemPickupView.as_view(), name = 'pickup'),
+    path('pickup/', views.pickup, name = 'pickup'),
     path('postpickup/', views.postpickup, name = 'postpickup'),
     path('login/', views.user_login, name = 'login'),
     path('signup/', views.sign_up, name = 'signup'),
     path('driversignup/', views.driver_sign_up, name = 'driversignup'),
     path('signout/', views.signout, name = 'signout'),
     path('admin/', admin.site.urls),
-    path('driverlogin/', views.driverlogin, name = 'driverlogin')
+    path('driverlogin/', views.driverlogin, name = 'driverlogin'),
+    path('driverview/', views.pickup_list, name = 'driverview')
     
 ]
 urlpatterns += staticfiles_urlpatterns()

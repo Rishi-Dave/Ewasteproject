@@ -50,25 +50,8 @@ class CustomUser(AbstractUser, PermissionsMixin):
 	city = models.CharField(max_length=1024)
 	objects = CustomUserManager()
 	is_driver = models.BooleanField(default=False)
+	pickup_requested = models.BooleanField(default=False)
 	USERNAME_FIELD = 'user_name'
 	REQUIRED_FIELDS = ['email']
 
-class ItemList(models.Model):
-	user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-	item_list = []
-	is_delivered = models.BooleanField(default=False)
-
-class Item(models.Model):
-	itemlist = models.ForeignKey(ItemList, on_delete=models.CASCADE)
-	OBJECT_TYPE_CHOICES = (
-		("battery", "battery"),
-		("none" , "none"),
-		("monitor" , "monitor"), #think of more later
-	)
-	object_type = models.CharField(
-		max_length = 20,
-		choices = OBJECT_TYPE_CHOICES,
-		default = "none"
-	)
-	
 	

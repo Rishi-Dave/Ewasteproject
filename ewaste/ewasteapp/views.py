@@ -3,25 +3,15 @@ from django.http import HttpResponse
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.views.generic.edit import CreateView
-from ewasteapp.forms import  DriverSignInForm, objectTypeForm, userLogInForm, userSignInForm
-from .models import Item, CustomUser
+from ewasteapp.forms import  DriverSignInForm, pickupForm, userLogInForm, userSignInForm
+from .models import CustomUser
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 def home_page(request):
     return render(request, "index.html")
-class ItemPickupView(CreateView):
-    form_class = objectTypeForm
-    template_name = 'pickup.html'
-    success_url = '/pickup'
-def item_form(request):
-    form = objectTypeForm()
-    if request.method == 'POST':
-        if request.user.is_authenticated():
-            form = objectTypeForm(request.POST)
-            if form.is_valid():
-                form.save()
+
 def sign_up(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -63,7 +53,23 @@ class UserView(CreateView):
     
 '''
 def pickup(request):
-    return render(request, 'pickup.html')
+    if not request.user.is_authenticated:
+            messages.error(request, "Please Log in before requesting a pickup")
+            return redirect('home')
+    else:
+        if request.method == 'POST':
+            form = pickupForm(request.POST, instance = request.user)
+            if form.is_valid(): 
+                form.save()
+                username = request.user.user_name
+
+                messages.success(request, "Pickup has been requested for "+username)
+                return redirect('login')
+        else:
+            form = pickupForm(request)
+        context = {"form" : form}
+        
+        return render(request, 'pickup.html', context)
 
 def postpickup(request):
     return render(request, 'postpickup.html')
@@ -72,6 +78,7 @@ def user_login(request):
     if request.method == 'POST':
         form = userLogInForm(request, data = request.POST)
         if form.is_valid(): 
+            
             user = form.get_user()
             if user is not None:
                 login(request, user)
@@ -103,15 +110,22 @@ def driver_sign_up(request):
                 msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
                 msg.attach_alternative(html_content, "text/html")
                 msg.send()   
-                messages.success(request, 'Account was created for ' + username)
                 '''
+                messages.success(request, 'Account was created for ' + username)
+                
                 return redirect('login')
             else:
                 # Add action to invalid form phase
                 messages.error(request, form.errors)
         context = {"form" : form}
         return render(request, 'signup.html', context)
-
+def pickup_list(request):
+    l1 = CustomUser.objects.filter(pickup_requested = True)
+    user_list = l1.filter(zip_code = 94555)
+    context = {
+    'user_list': user_list
+    }  
+    return render(request, 'driver_view.html', context)
 def signout(request):
     logout(request)
     messages.success(request, "Logged Out Successfully!!")

@@ -13,12 +13,13 @@
     
 
     <form class="form-select d-inline-block" action="" method="post">{% csrf_token %}
+       
         {{ form.as_p }}
         <input type="submit" value="Create" />
+        <p></p>
     </form>
     
 </div>
-    </Body>
-       
-       {% endblock %}
-    </Body>
+{% endblock %}
+ </Body>
+    
