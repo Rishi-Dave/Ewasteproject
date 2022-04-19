@@ -40,37 +40,26 @@ def sign_up(request):
                 messages.error(request, form.errors)
         context = {"form" : form}
         return render(request, 'signup.html', context)
-
-'''''
-class UserView(CreateView):
-    form_class = userSignInForm
-    template_name = 'signup.html' 
-    success_url = '/login'
-    def form_invalid(self,form):
-            # Add action to invalid form phase
-            messages.error(self.request, form.errors)
-            return self.render_to_response(self.get_context_data(form=form))
-    
-'''
+''''   
 def pickup(request):
     if not request.user.is_authenticated:
             messages.error(request, "Please Log in before requesting a pickup")
             return redirect('home')
     else:
         if request.method == 'POST':
-            form = pickupForm(request.POST, instance = request.user)
+            form = pickupForm(request.POST)
             if form.is_valid(): 
                 form.save()
-                username = request.user.user_name
-
-                messages.success(request, "Pickup has been requested for "+username)
-                return redirect('login')
+                return redirect('home')
         else:
             form = pickupForm(request)
         context = {"form" : form}
-        
         return render(request, 'pickup.html', context)
-
+'''
+class PickupView(CreateView):
+    form_class = pickupForm
+    template_name = 'pickup.html' 
+    success_url = '/'
 def postpickup(request):
     return render(request, 'postpickup.html')
 

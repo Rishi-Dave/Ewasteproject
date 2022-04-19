@@ -53,5 +53,13 @@ class CustomUser(AbstractUser, PermissionsMixin):
 	pickup_requested = models.BooleanField(default=False)
 	USERNAME_FIELD = 'user_name'
 	REQUIRED_FIELDS = ['email']
-
+class Item(models.Model):
+	OBJECT_TYPE_CHOICES = (
+		("battery", "battery"),
+		("tv" , "tv"),
+		("monitor" , "monitor"), #think of more later
+	)
+	name = models.CharField(max_length=20, choices=OBJECT_TYPE_CHOICES)
+	user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+	picked_up_date = models.DateTimeField(null=True)
 	

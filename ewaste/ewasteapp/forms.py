@@ -1,12 +1,12 @@
 from django.forms import ModelForm
-from .models import  CustomUser
+from .models import  CustomUser, Item
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 class pickupForm(ModelForm):
     class Meta:
-        model = CustomUser
-        fields = ['pickup_requested']
+        model = Item
+        fields = ['user', 'name']
     
 class userSignInForm(UserCreationForm):
     """
