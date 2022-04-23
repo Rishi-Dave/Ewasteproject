@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 class pickupForm(ModelForm):
     class Meta:
         model = Item
-        fields = ['user', 'name']
+        fields = ['name']
     
 class userSignInForm(UserCreationForm):
     """

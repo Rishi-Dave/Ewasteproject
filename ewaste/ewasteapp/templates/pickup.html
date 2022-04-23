@@ -11,10 +11,14 @@
     {% block content %}
     <div class="form-group"></div>
     
+    {% if user.pickup_requested %}
+    <p>You have already requested a pickup</p>
+    {% else %}
 
-    <form class="form-select d-inline-block" action="" method="post">
+    <form class="" action="" method="post">
         {% csrf_token %}
-        {% for field in form %}
+        <!----
+        {% for field in formset %}
             <div class="mb-3 row">
             <label for="" class="col-sm-2 col-form-label">{{ field.label_tag }}</label>
             
@@ -23,11 +27,12 @@
             </div>
         </div>
         {% endfor %}
-
-        <input type="submit" value="Create" />
+        -->
+        {{ formset.as_p }}
+        <input type="submit" value="Create" />  
         <p></p>
     </form>
-    
+    {% endif %}
 </div>
 {% endblock %}
  </Body>

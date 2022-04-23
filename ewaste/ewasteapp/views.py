@@ -7,6 +7,7 @@ from ewasteapp.forms import  DriverSignInForm, pickupForm, userLogInForm, userSi
 from .models import CustomUser
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.forms import formset_factory
 
 # Create your views here.
 def home_page(request):
@@ -40,26 +41,29 @@ def sign_up(request):
                 messages.error(request, form.errors)
         context = {"form" : form}
         return render(request, 'signup.html', context)
-''''   
+
 def pickup(request):
     if not request.user.is_authenticated:
             messages.error(request, "Please Log in before requesting a pickup")
             return redirect('home')
     else:
         if request.method == 'POST':
-            form = pickupForm(request.POST)
-            if form.is_valid(): 
-                form.save()
+            PickupFormSet = formset_factory(pickupForm, extra = 3)
+            formset = PickupFormSet(request.POST)
+            if formset.is_valid():
+                for form in formset:
+                    obj = form.save(commit = False)
+                    obj.user = request.user
+                    obj.user.pickup_requested = True
+                    obj.save()
                 return redirect('home')
         else:
-            form = pickupForm(request)
-        context = {"form" : form}
+            PickupFormSet = formset_factory(pickupForm, extra = 3)
+            formset = PickupFormSet(None)
+        context = {"formset" : formset}
         return render(request, 'pickup.html', context)
-'''
-class PickupView(CreateView):
-    form_class = pickupForm
-    template_name = 'pickup.html' 
-    success_url = '/'
+
+
 def postpickup(request):
     return render(request, 'postpickup.html')
 
