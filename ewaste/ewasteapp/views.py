@@ -51,10 +51,11 @@ def pickup(request):
             PickupFormSet = formset_factory(pickupForm, extra = 3)
             formset = PickupFormSet(request.POST)
             if formset.is_valid():
+                request.user.pickup_requested = True
+                request.user.save()
                 for form in formset:
                     obj = form.save(commit = False)
                     obj.user = request.user
-                    obj.user.pickup_requested = True
                     obj.save()
                 return redirect('home')
         else:
