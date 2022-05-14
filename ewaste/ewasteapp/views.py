@@ -4,7 +4,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.views.generic.edit import CreateView
 from ewasteapp.forms import  DriverSignInForm, pickupForm, userLogInForm, userSignInForm
-from .models import CustomUser
+from .models import CustomUser, Item
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.forms import formset_factory
@@ -120,6 +120,21 @@ def pickup_list(request):
     'user_list': user_list
     }  
     return render(request, 'driver_view.html', context)
+def delete(request):
+    items = Item.objects.filter(user=request.user)
+    request.user.pickup_requested = False
+    request.user.save()
+    for instance in items:
+        instance.delete()
+    return redirect('pickup')
+def delivered(request, obj_id):
+    user = CustomUser.objects.get(pk=obj_id)
+    user.pickup_requested = False
+    user.save()
+    items = Item.objects.filter(user=user)
+    for instance in items:
+        instance.delete()
+    return redirect('driverview')
 def signout(request):
     logout(request)
     messages.success(request, "Logged Out Successfully!!")

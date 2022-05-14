@@ -13,21 +13,11 @@
     
     {% if user.pickup_requested %}
     <p>You have already requested a pickup</p>
+    <a href="{% url 'delete' %}"><button type = "submit">Delete</button></a>
     {% else %}
 
     <form class="" action="" method="post">
         {% csrf_token %}
-        <!----
-        {% for field in formset %}
-            <div class="mb-3 row">
-            <label for="" class="col-sm-2 col-form-label">{{ field.label_tag }}</label>
-            
-            <div class="col-sm-10">
-                {{ field }}
-            </div>
-        </div>
-        {% endfor %}
-        -->
         {{ formset.as_p }}
         <input type="submit" value="Create" />  
         <p></p>

@@ -4,6 +4,7 @@
     {% for obj in user_list %}
     <p>{{obj.user_name}}</p>
     <p>{{obj.address}}</p>
+    <a href="{% url 'delivered' obj.id %}" class="btn btn-outline-danger btn-sm">Delete Event</a>
     {% endfor %}
     {% endblock %}
 </body>

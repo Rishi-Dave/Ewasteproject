@@ -27,7 +27,8 @@ urlpatterns = [
     path('signout/', views.signout, name = 'signout'),
     path('admin/', admin.site.urls),
     path('driverlogin/', views.driverlogin, name = 'driverlogin'),
-    path('driverview/', views.pickup_list, name = 'driverview')
-    
+    path('driverview/', views.pickup_list, name = 'driverview'),
+    path('delete/', views.delete, name = 'delete'),
+    path('delivered/<obj_id>', views.delivered, name = 'delivered'),
 ]
 urlpatterns += staticfiles_urlpatterns()
