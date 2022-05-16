@@ -8,7 +8,7 @@ from .models import CustomUser, Item
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.forms import formset_factory
-
+import datetime
 # Create your views here.
 def home_page(request):
     return render(request, "index.html")
@@ -113,7 +113,7 @@ def driver_sign_up(request):
                 messages.error(request, form.errors)
         context = {"form" : form}
         return render(request, 'signup.html', context)
-def pickup_list(request):
+def driverview(request):
     l1 = CustomUser.objects.filter(pickup_requested = True)
     user_list = l1.filter(zip_code = 94555)
     context = {
@@ -133,7 +133,8 @@ def delivered(request, obj_id):
     user.save()
     items = Item.objects.filter(user=user)
     for instance in items:
-        instance.delete()
+        instance.picked_up_date = datetime.datetime.now()
+        instance.save()
     return redirect('driverview')
 def signout(request):
     logout(request)

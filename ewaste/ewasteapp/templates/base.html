@@ -1,52 +1,20 @@
+{% load static %}
+
 <html>
     <head>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>   
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'style.css' %}"/>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+
+        
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Ovo&display=swap');
-            .logo{
-                width: 226.4px; 
-                height: 76.2px;
-            }
-            .title{
-                text-align: right;
-                font-family: Ovo;
-                font-style: normal;
-                font-weight: normal;
-                
-                
-    
-                color: white;
-            }
-            nav{
-                
-                
-                height: 124.45px;
-                
-                top: 0px;
-            }
-            .pickup{
-                
-                width: 150px;
-                
-                text-align: right;
-                top: 30px;
-        
-                font-family: Ovo;
-                font-style: normal;
-                font-weight: normal;
-                font-size: 36px;
-                line-height: 72px;
-        
-                
-        
-            }
+
         </style>
     </head>
     <body>
         <!-- header code -->
-        <nav class="navbar navbar-expand-lg navbar-expand-sm navbar-dark bg-dark ">
+        <nav class="navbar navbar-expand-lg navbar-expand-sm  container-fluid-nav ">
             <ul class="navbar-nav " >
                 <li >
                     
@@ -54,41 +22,43 @@
                     {% load static %} <img class="logo" src= "{% static "images/ersDesign.png" %}" alt=""  >
                     
                 </a>
-                <p>
-                    <tex† class="title"  >Electronics Recycling Service <span class="sr-only">(current)</span></text>
-                </p>
+
                
             </li>
             </ul>
-            <ul class="navbar-nav  " >
-                
-                <li class="nav-item">
+            <ul class="navbar-nav  justify-content-end" >
+                {% if user.is_driver %}
+                    <li>
+                        <a class="nav-link pickup" href="{% url 'driverview' %}"> Dashboard</a>
+                    </li>
+                {% else %}
+                <li>
                   
                     <a class="nav-link pickup"  href="{% url 'pickup' %}">Pickup</a>
                 
                   </li>
+                {% endif %}
                   {% if user.is_authenticated %}
                   <li class="nav-link pickup"  > User: {{user.user_name}}
                 
                   </li>
-                  <li class="nav-item">
+                  <li >
                     <a class="nav-link pickup" href="{% url 'signout' %}"> Signout</a>
-                </li> 
+                </li>
+              
                   {%else%}
-                  <li class="nav-item">
-                    <a class="nav-link pickup" href="{% url 'login' %}"> Customer Log-In</a>
+                <ul class = " navbar-nav text-end">
+                  <li class="">
+                    <a class="nav-link pickup" href="{% url 'login' %}">Log-In</a>
                 </li>
                 
-                <li class="nav-item">
+                <li class=" ">
                     <a class="nav-link pickup" href="{% url 'signup' %}"> SignUp</a>
                 </li>   
-                <li class="nav-item">
-                    <a class="nav-link pickup" href="{% url 'driversignup' %}"> Driver SignUp</a>
-                </li>   
+                </ul>
                 {% endif %}
         
             </ul>
-            
         </nav>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         {% block content %}

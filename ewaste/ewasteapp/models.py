@@ -27,6 +27,7 @@ class CustomUserManager(BaseUserManager):
 		user.is_active = True
 		user.save()
 		return user
+
 	def create_user(self, email, user_name, first_name, last_name, password, address, zip_code, city):
 		if not email:
 			raise ValueError(_('You must provide an email address'))
