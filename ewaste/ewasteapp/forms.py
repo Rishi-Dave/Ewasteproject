@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, TextInput, EmailInput
 from .models import  CustomUser, Item
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -49,6 +49,14 @@ class userLogInForm(AuthenticationForm):
     class Meta:
         model = CustomUser
         fields = ["user_name"] 
+        widgets = {
+            'user_name': TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: 300px;',
+                'placeholder': 'Username'
+                }),
+
+        }
 
 
 

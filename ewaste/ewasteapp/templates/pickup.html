@@ -1,10 +1,4 @@
 {% extends "base.html" %}
-<head>
-    <style>
-        
-    
-    </style>
-<Body >
     <!-- temp[late inheritance] /-->
     
     
@@ -16,7 +10,7 @@
     <a href="{% url 'delete' %}"><button type = "submit">Delete</button></a>
     {% else %}
 
-    <form class="" action="" method="post">
+    <form class="form" action="" method="post">
         {% csrf_token %}
         {{ formset.as_p }}
         <input type="submit" value="Create" />  
@@ -25,5 +19,4 @@
     {% endif %}
 </div>
 {% endblock %}
- </Body>
     
