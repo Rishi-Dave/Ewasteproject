@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import django_heroku
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +26,7 @@ SECRET_KEY = '_1-a719=x!n-pxq5qv-wzo*+0r*njrb$z_o%olsaxu0$vc=ikr'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1','sampledomain.com']
+ALLOWED_HOSTS = ['electronicrecylcingservice.herokuapp.com']
 
 
 #Application definition
@@ -84,6 +85,11 @@ WSGI_APPLICATION = 'ewaste.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db2keh2k2g2v34',
+        'USER': 'wplzdoibiabnrz',
+        'PASSWORD': '14e0c318393e7914d3d261a629be6ae92f0bcf204d68d181976a4e269047990a',
+        'HOST': 'ec2-100-26-39-41.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
@@ -125,6 +131,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
+django_heroku.settings(locals())
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
