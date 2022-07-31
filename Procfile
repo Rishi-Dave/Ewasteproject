@@ -1,1 +1,1 @@
-web: gunicorn ewaste.wsgi --log-file -
+web: gunicorn ewaste.wsgi
