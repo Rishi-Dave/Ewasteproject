@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+    <!-- temp[late inheritance] /-->
+    
+    
+    {% block content %}
+    <div class="form-group"></div>
+    
+    {% if user.pickup_requested %}
+    <p>You have already requested a pickup</p>
+    <a href="{% url 'delete' %}"><button type = "submit">Delete</button></a>
+    {% else %}
+
+    <form class="form" action="" method="post">
+        {% csrf_token %}
+        {{ formset.as_p }}
+        <input type="submit" value="Create" />  
+        <p></p>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}
+    

@@ -1,60 +1,66 @@
+from contextlib import nullcontext
 from django.db import models
+from django.db.models.fields import NullBooleanField
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager
+from django.conf import settings
 #user manager
+class CustomUserManager(BaseUserManager):
+	def create_superuser(self, email, user_name ,password, **other_fields):
 
-class CustomUser(AbstractUser):
-	email = models.EmailField(_('email address'), unique=True)
+		other_fields.setdefault('is_staff', True)
+		other_fields.setdefault('is_superuser', True)
+		other_fields.setdefault('is_active', True)
+
+		if other_fields.get('is_staff') is not True:
+			raise ValueError(
+				'Superuser must be assigned to is_staff=True.')
+		if other_fields.get('is_superuser') is not True:
+			raise ValueError(
+				'Superuser must be assigned to is_superuser=True.')
+		
+		user = self.create_user(email, user_name, "rishi", "dave", password, "none", "non","none" )
+		user.is_admin = True
+		user.is_staff = True
+		user.is_superuser = True
+		user.is_active = True
+		user.save()
+		return user
+
+	def create_user(self, email, user_name, first_name, last_name, password, address, zip_code, city):
+		if not email:
+			raise ValueError(_('You must provide an email address'))
+
+		email = self.normalize_email(email)
+		user = self.model(email=email, user_name=user_name, first_name=first_name, last_name = last_name, address = address, zip_code = zip_code, city = city)
+		user.set_password(password)
+		user.is_active = True
+		user.save()
+		return user
+class CustomUser(AbstractUser, PermissionsMixin):
+	username = None
+	email = models.EmailField(_('email address'))
+	user_name = models.CharField(max_length=150, blank=True, unique = True)
 	first_name = models.CharField(max_length=150, blank=True)
 	last_name = models.CharField(max_length=150, blank=True)
 	start_date = models.DateTimeField(default=timezone.now)
-	address = models.CharField(max_length=300, unique=True) 
-	is_active = models.BooleanField(default=False)
-	@property
-	def user_name(self):
-		return self.first_name + " " + self.last_name
-	
+	address = models.CharField(max_length=300) 
+	is_active = models.BooleanField(default=True)
+	zip_code = models.CharField(max_length=12)
+	city = models.CharField(max_length=1024)
+	objects = CustomUserManager()
+	is_driver = models.BooleanField(default=False)
+	pickup_requested = models.BooleanField(default=False)
+	USERNAME_FIELD = 'user_name'
+	REQUIRED_FIELDS = ['email']
 class Item(models.Model):
-	WEIGHT_CHOICES = (
-		("1-10", "1lbs - 10lbs"),
-		("11-20", "11lbs - 20lbs"),
-		("21-30","21lbs - 30lbs") ,#add pounds
-		("31-40","31lbs - 40lbs"),
-		("41-50","41lbs - 50lbs"),
-		("51-60","51lbs - 60lbs"),
-		("61-70","61lbs - 70lbs"),
-		("71-80","71lbs - 80lbs"),
-		("81-90","81lbs - 90lbs"),
-		("91-100","91lbs - 100lbs")
-	)
-	estimated_weight_in_pounds = models.CharField(
-		max_length = 20,
-		choices = WEIGHT_CHOICES,
-		default = "1-10"
-	)
 	OBJECT_TYPE_CHOICES = (
 		("battery", "battery"),
-		("none" , "none"),
+		("tv" , "tv"),
 		("monitor" , "monitor"), #think of more later
 	)
-	object_type = models.CharField(
-		max_length = 20,
-		choices = OBJECT_TYPE_CHOICES,
-		default = "none"
-	)
-	is_delivered = models.BooleanField(default=False)
-class Driver(models.Model): #look up
-	email = models.EmailField(_('email address'), unique=True)
-	first_name = models.CharField(max_length=150, blank=True)
-	last_name = models.CharField(max_length=150, blank=True)
-	start_date = models.DateTimeField(default=timezone.now)
-	address = models.CharField(max_length=300, unique=True) #change "char field"
-	is_active = models.BooleanField(default=False)
-
-	@property
-	def user_name(self):
-		return self.first_name + " " + self.last_name
-
-	start_time = models.DateTimeField()
-	end_time = models.DateTimeField()
+	name = models.CharField(max_length=20, choices=OBJECT_TYPE_CHOICES)
+	user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+	picked_up_date = models.DateTimeField(null=True)
+	

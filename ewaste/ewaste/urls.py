@@ -16,8 +16,26 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from ewasteapp import views
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf import settings
+from django.conf.urls.static import static
+
+from django.views.static import serve
+from django.urls import re_path as url
 urlpatterns = [
-    path('', views.home_page),
+    path('', views.home_page, name = 'home'),
+    path('pickup/', views.pickup, name = 'pickup'),
+    path('postpickup/', views.postpickup, name = 'postpickup'),
+    path('login/', views.user_login, name = 'login'),
+    path('signup/', views.sign_up, name = 'signup'),
+    path('driversignup/', views.driver_sign_up, name = 'driversignup'),
+    path('signout/', views.signout, name = 'signout'),
     path('admin/', admin.site.urls),
-    
-]
+    path('driverlogin/', views.driverlogin, name = 'driverlogin'),
+    path('driverview/', views.driverview, name = 'driverview'),
+    path('delete/', views.delete, name = 'delete'),
+    path('delivered/<obj_id>', views.delivered, name = 'delivered'),
+    url(r'^media/(?P<path>.*)$', serve,{'document_root':       settings.MEDIA_ROOT}), 
+    url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
