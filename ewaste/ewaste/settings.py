@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '_1-a719=x!n-pxq5qv-wzo*+0r*njrb$z_o%olsaxu0$vc=ikr'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['electronicrecylcingservice.herokuapp.com']
 
