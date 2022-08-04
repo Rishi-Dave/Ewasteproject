@@ -1,1 +1,1 @@
-web: gunicorn ewaste.wsgi
+web: gunicorn --pythonpath ewaste ewaste.wsgi --log-file -
