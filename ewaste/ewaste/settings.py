@@ -27,7 +27,7 @@ SECRET_KEY = '_1-a719=x!n-pxq5qv-wzo*+0r*njrb$z_o%olsaxu0$vc=ikr'
 DEBUG = True
 
 ALLOWED_HOSTS = ['electronicrecylcingservice.herokuapp.com']
-
+DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
 
 #Application definition
 #EMAIL_BACKEND = 'django.core.mail.backends.stmp.EmailBackend'
