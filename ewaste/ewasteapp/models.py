@@ -57,8 +57,9 @@ class CustomUser(AbstractUser, PermissionsMixin):
 class Item(models.Model):
 	OBJECT_TYPE_CHOICES = (
 		("battery", "battery"),
-		("tv" , "tv"),
-		("monitor" , "monitor"), #think of more later
+		("cable" , "cable"),
+		("monitor" , "monitor"),
+		("small appliance" , "small appliance"), #think of more later
 	)
 	name = models.CharField(max_length=20, choices=OBJECT_TYPE_CHOICES)
 	user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
